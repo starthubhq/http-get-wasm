@@ -1,7 +1,10 @@
 {
   "name": "http-get-wasm",
   "version": "0.0.1",
-  "ref": "https://github.com/starthubhq/http-get-wasm/releases/download/v0.0.1/module.wasm",
+  "kind": "wasm",
+  "repository": "github.com/starthubhq/http-get-wasm",
+  "image": "ghcr.io/starthubhq/http-get-wasm",
+  "license": "MIT",
   "inputs": [
     { "name": "url", "description": "The URL to GET", "type": "string" },
     { "name": "headers", "description": "Optional HTTP headers (object of key->value)", "type": "object" }

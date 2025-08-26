@@ -1,0 +1,9 @@
+{
+  "name": "http-get-wasm",
+  "version": "0.0.1",
+  "kind": "wasm",
+  "distribution": {
+    "primary": "oci://ghcr.io/starthubhq/http-get-wasm@sha256:1919e449e3171ad834d4031e4645a0e22562f8d0fa687598ec5181193959a6d2"
+  },
+  "digest": "sha256:1919e449e3171ad834d4031e4645a0e22562f8d0fa687598ec5181193959a6d2"
+}
