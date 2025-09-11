@@ -1,9 +1,31 @@
 {
   "name": "http-get-wasm",
+  "description": "Generated manifest",
   "version": "0.0.1",
   "kind": "wasm",
+  "manifest_version": 1,
+  "repository": "github.com/starthubhq/http-get-wasm",
+  "license": "MIT",
+  "inputs": [
+    {
+      "name": "url",
+      "description": "The URL to fetch data from",
+      "type": "string",
+      "required": true,
+      "default": null
+    }
+  ],
+  "outputs": [
+    {
+      "name": "response",
+      "description": "The HTTP response data",
+      "type": "object",
+      "required": true,
+      "default": null
+    }
+  ],
   "distribution": {
-    "primary": "oci://ghcr.io/starthubhq/http-get-wasm@sha256:1919e449e3171ad834d4031e4645a0e22562f8d0fa687598ec5181193959a6d2"
+    "primary": "https://smltnjrrzkmazvbrqbkq.storage.supabase.co/storage/v1/s3/@sha256:http-get-wasm"
   },
-  "digest": "sha256:1919e449e3171ad834d4031e4645a0e22562f8d0fa687598ec5181193959a6d2"
+  "digest": "sha256:http-get-wasm"
 }

@@ -1,16 +1,44 @@
 {
   "name": "http-get-wasm",
+  "description": "HTTP GET request module for fetching data from web APIs",
   "version": "0.0.1",
   "kind": "wasm",
+  "manifest_version": 1,
   "repository": "github.com/starthubhq/http-get-wasm",
-  "image": "ghcr.io/starthubhq/http-get-wasm",
   "license": "MIT",
   "inputs": [
-    { "name": "url", "description": "The URL to GET", "type": "string" },
-    { "name": "headers", "description": "Optional HTTP headers (object of key->value)", "type": "object" }
+    {
+      "name": "url",
+      "type": "string",
+      "required": true,
+      "description": "The URL to fetch data from"
+    },
+    {
+      "name": "headers",
+      "type": "HttpHeaders",
+      "required": false,
+      "description": "Optional HTTP headers to send with the request"
+    }
   ],
   "outputs": [
-    { "name": "status", "description": "HTTP status code", "type": "integer" },
-    { "name": "body",   "description": "Response body as string", "type": "string" }
-  ]
+    {
+      "name": "body",
+      "type": "HttpResponse",
+      "required": true,
+      "description": "Response"
+    }
+  ],
+  "types": {
+    "HttpHeaders": {
+      "Content-Type": "string",
+      "Authorization": "string",
+      "User-Agent": "string",
+      "Accept": "string",
+      "X-API-Key": "string"
+    },
+    "HttpResponse": {
+      "status": "number",
+      "body": "string"
+    }
+  }
 }
