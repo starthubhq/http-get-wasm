@@ -1,0 +1,22 @@
+{
+  "name": "@starthub/http-get-wasm",
+  "version": "0.0.1",
+  "description": "HTTP GET request module for fetching data from web APIs",
+  "main": "index.js",
+  "scripts": {
+    "build": "cargo +nightly component build --release",
+    "test": "node test.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "wasm",
+    "http",
+    "fetch",
+    "starthub"
+  ],
+  "author": "StarHub",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
