@@ -5,8 +5,14 @@ A WebAssembly module for making HTTP GET requests, built with Rust and Waki, wit
 ## Prerequisites
 
 - Node.js 16+ 
-- wasmtime (install with `brew install wasmtime`)
+- wasmtime (install with `brew install wasmtime` on macOS, or download from [wasmtime.dev](https://wasmtime.dev/))
 - Rust with nightly toolchain
+
+## Quick Start
+
+1. Install wasmtime: `brew install wasmtime`
+2. Build the WASM module: `npm run build`
+3. Run a test: `npm test`
 
 ## Building
 
