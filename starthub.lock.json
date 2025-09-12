@@ -1,7 +1,7 @@
 {
   "name": "http-get-wasm",
-  "description": "Generated manifest",
-  "version": "0.0.1",
+  "description": "HTTP GET request module for fetching data from web APIs",
+  "version": "0.0.12",
   "kind": "wasm",
   "manifest_version": 1,
   "repository": "github.com/starthubhq/http-get-wasm",
@@ -13,19 +13,39 @@
       "type": "string",
       "required": true,
       "default": null
+    },
+    {
+      "name": "headers",
+      "description": "Optional HTTP headers to send with the request",
+      "type": "HttpHeaders",
+      "required": false,
+      "default": null
     }
   ],
   "outputs": [
     {
-      "name": "response",
-      "description": "The HTTP response data",
-      "type": "object",
+      "name": "body",
+      "description": "Response",
+      "type": "HttpResponse",
       "required": true,
       "default": null
     }
   ],
+  "types": {
+    "HttpHeaders": {
+      "Accept": "string",
+      "Authorization": "string",
+      "Content-Type": "string",
+      "User-Agent": "string",
+      "X-API-Key": "string"
+    },
+    "HttpResponse": {
+      "body": "string",
+      "status": "number"
+    }
+  },
   "distribution": {
-    "primary": "https://smltnjrrzkmazvbrqbkq.storage.supabase.co/storage/v1/s3/@sha256:http-get-wasm"
+    "primary": "https://api.starthub.so/storage/v1/object/public/artifacts/tgirotto/http-get-wasm/0.0.12/artifact.zip"
   },
   "digest": "sha256:http-get-wasm"
 }
