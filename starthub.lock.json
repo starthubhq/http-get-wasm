@@ -1,7 +1,7 @@
 {
   "name": "http-get-wasm",
   "description": "HTTP GET request module for fetching data from web APIs",
-  "version": "0.0.12",
+  "version": "0.0.16",
   "kind": "wasm",
   "manifest_version": 1,
   "repository": "github.com/starthubhq/http-get-wasm",
@@ -45,7 +45,7 @@
     }
   },
   "distribution": {
-    "primary": "https://api.starthub.so/storage/v1/object/public/artifacts/tgirotto/http-get-wasm/0.0.12/artifact.zip"
+    "primary": "https://api.starthub.so/storage/v1/object/public/artifacts/tgirotto/http-get-wasm/0.0.16/artifact.zip"
   },
   "digest": "sha256:http-get-wasm"
 }
