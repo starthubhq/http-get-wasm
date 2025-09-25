@@ -11,7 +11,7 @@ A WebAssembly module for making HTTP GET requests, built with Rust and Waki.
 
 1. Install wasmtime: `brew install wasmtime`
 2. Build the WASM module: `cargo +nightly component build --release`
-3. Run a test: `echo '[{"url":"https://httpbin.org/get"}]' | wasmtime -S http ./target/wasm32-wasip1/release/http-get-wasm.wasm`
+3. Run a test: `echo '[{"url":"https://httpbin.org/json"}]' | wasmtime -S http ./target/wasm32-wasip1/release/http-get-wasm.wasm`
 
 ## Building
 
@@ -24,43 +24,43 @@ cargo +nightly component build --release
 ### With wasmtime
 
 ```bash
-echo '[{"url":"https://httpbin.org/get"}]' \
+echo '{"url":"https://httpbin.org/json"}' \
   | wasmtime -S http ./target/wasm32-wasip1/release/http-get-wasm.wasm
 ```
 
 ### With headers
 
 ```bash
-echo '[{"url":"https://httpbin.org/headers"},{"User-Agent":"MyApp/1.0","X-Custom":"value"}]' \
+echo '{"url":"https://httpbin.org/headers","headers":"{\"User-Agent\":\"MyApp/1.0\",\"X-Custom\":\"value\"}"}' \
   | wasmtime -S http ./target/wasm32-wasip1/release/http-get-wasm.wasm
 ```
 
 ## Input Format
 
-The module expects a JSON array with:
-- **First element**: Object with `url` field (required)
-- **Second element**: Object with HTTP headers (optional)
+The module expects a JSON object with:
+- **`url`**: String with the URL to fetch (required)
+- **`headers`**: String with JSON-encoded headers or object with headers (optional)
 
 Example:
 ```json
-[
-  {"url": "https://httpbin.org/get"},
-  {"User-Agent": "MyApp/1.0", "Authorization": "Bearer token"}
-]
+{
+  "url": "https://httpbin.org/get",
+  "headers": "{\"User-Agent\": \"MyApp/1.0\", \"Authorization\": \"Bearer token\"}"
+}
 ```
 
 ## Output Format
 
-Returns a JSON array with:
-- **First element**: Object with `status` field (HTTP status code)
-- **Second element**: Object with `body` field (response body)
+Returns a JSON object with:
+- **`status`**: Number with HTTP status code
+- **`body`**: String with response body
 
 Example:
 ```json
-[
-  {"status": 200},
-  {"body": "{\"message\": \"Hello World\"}"}
-]
+{
+  "status": 200,
+  "body": "{\"message\": \"Hello World\"}"
+}
 ```
 
 ## Implementation Notes

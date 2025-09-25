@@ -8,29 +8,49 @@ fn main() {
     // ---- read stdin ----
     let mut buf = String::new();
     let _ = io::stdin().read_to_string(&mut buf);
-    let input: Vec<Value> = serde_json::from_str(&buf)
-        .unwrap_or_else(|_| vec![]);
+    let input: Value = serde_json::from_str(&buf)
+        .unwrap_or_else(|_| json!({}));
 
-    // ---- required url (first element should be an object with 'url' field) ----
-    let Some(url_obj) = input.get(0).and_then(|v| v.as_object()) else {
-        eprintln!(r#"{{"error": "missing required first element with 'url' field"}}"#);
+    // ---- required url (input should be an object with 'url' field) ----
+    let Some(input_obj) = input.as_object() else {
+        eprintln!(r#"{{"error": "input must be a JSON object"}}"#);
         return;
     };
     
-    let Some(url) = url_obj.get("url").and_then(|v| v.as_str()) else {
-        eprintln!(r#"{{"error": "missing required 'url' field in first element"}}"#);
+    let Some(url) = input_obj.get("url").and_then(|v| v.as_str()) else {
+        eprintln!(r#"{{"error": "missing required 'url' field"}}"#);
         return;
     };
 
-    // ---- optional headers (second element should be an object with headers) ----
+    // ---- optional headers (headers field can be a string or object) ----
     let mut headers_static: Vec<(&'static str, &'static str)> = Vec::new();
-    if let Some(headers_obj) = input.get(1).and_then(|v| v.as_object()) {
-        for (k, v) in headers_obj {
-            if let Some(val) = v.as_str() {
-                let k_static: &'static str = Box::leak(k.clone().into_boxed_str());
-                let v_static: &'static str = Box::leak(val.to_string().into_boxed_str());
-                headers_static.push((k_static, v_static));
-            }
+    if let Some(headers_value) = input_obj.get("headers") {
+        match headers_value {
+            Value::String(headers_str) => {
+                // Parse JSON string if it's a JSON string
+                if let Ok(headers_obj) = serde_json::from_str::<Value>(headers_str) {
+                    if let Some(headers_map) = headers_obj.as_object() {
+                        for (k, v) in headers_map {
+                            if let Some(val) = v.as_str() {
+                                let k_static: &'static str = Box::leak(k.clone().into_boxed_str());
+                                let v_static: &'static str = Box::leak(val.to_string().into_boxed_str());
+                                headers_static.push((k_static, v_static));
+                            }
+                        }
+                    }
+                }
+            },
+            Value::Object(headers_obj) => {
+                // Direct object format
+                for (k, v) in headers_obj {
+                    if let Some(val) = v.as_str() {
+                        let k_static: &'static str = Box::leak(k.clone().into_boxed_str());
+                        let v_static: &'static str = Box::leak(val.to_string().into_boxed_str());
+                        headers_static.push((k_static, v_static));
+                    }
+                }
+            },
+            _ => {}
         }
     }
 
@@ -47,19 +67,19 @@ fn main() {
             let body = r.body().unwrap_or_default();
             let body_str = String::from_utf8_lossy(&body).to_string();
 
-            // Success: output to stdout
-            let output = json!([
-                {"status": status},
-                {"body": body_str}
-            ]);
+            // Success: output to stdout as key-value object
+            let output = json!({
+                "status": status,
+                "body": body_str
+            });
             
             println!("{}", output.to_string());
         }
         Err(e) => {
-            // Error: output to stderr
-            let error_output = json!([
-                {"error": e.to_string()}
-            ]);
+            // Error: output to stderr as key-value object
+            let error_output = json!({
+                "error": e.to_string()
+            });
             eprintln!("{}", error_output.to_string());
         }
     }
