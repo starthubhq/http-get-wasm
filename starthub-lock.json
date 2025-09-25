@@ -6,31 +6,27 @@
   "manifest_version": 1,
   "repository": "github.com/starthubhq/http-get-wasm",
   "license": "MIT",
-  "inputs": [
-    {
-      "name": "url",
+  "inputs": {
+    "url": {
       "description": "The URL to fetch data from",
       "type": "string",
       "required": true,
       "default": null
     },
-    {
-      "name": "headers",
+    "headers": {
       "description": "Optional HTTP headers to send with the request",
       "type": "HttpHeaders",
       "required": false,
       "default": null
     }
-  ],
-  "outputs": [
-    {
-      "name": "body",
-      "description": "Response",
+  },
+  "outputs": {
+    "response": {
+      "description": "HTTP response from the request",
       "type": "HttpResponse",
-      "required": true,
-      "default": null
+      "required": true
     }
-  ],
+  },
   "types": {
     "HttpHeaders": {
       "Accept": "string",
@@ -43,9 +39,5 @@
       "body": "string",
       "status": "number"
     }
-  },
-  "distribution": {
-    "primary": "https://api.starthub.so/storage/v1/object/public/artifacts/tgirotto/http-get-wasm/0.0.16/artifact.zip"
-  },
-  "digest": "sha256:http-get-wasm"
+  }
 }
