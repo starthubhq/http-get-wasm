@@ -6,27 +6,30 @@
   "manifest_version": 1,
   "repository": "github.com/starthubhq/http-get-wasm",
   "license": "MIT",
-  "inputs": {
-    "url": {
+  "inputs": [
+    {
+      "name": "url",
       "description": "The URL to fetch data from",
       "type": "string",
       "required": true,
       "default": null
     },
-    "headers": {
+    {
+      "name": "headers",
       "description": "Optional HTTP headers to send with the request",
       "type": "HttpHeaders",
       "required": false,
       "default": null
     }
-  },
-  "outputs": {
-    "response": {
+  ],
+  "outputs": [
+    {
+      "name": "response",
       "description": "HTTP response from the request",
       "type": "HttpResponse",
       "required": true
     }
-  },
+  ],
   "types": {
     "HttpHeaders": {
       "Accept": "string",

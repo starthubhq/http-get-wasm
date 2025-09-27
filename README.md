@@ -21,46 +21,59 @@ cargo +nightly component build --release
 
 ## Usage
 
-### With wasmtime
+### With wasmtime (Array Format)
 
 ```bash
-echo '{"url":"https://httpbin.org/json"}' \
+echo '[{"name":"url","value":"https://httpbin.org/json"}]' \
   | wasmtime -S http ./target/wasm32-wasip1/release/http-get-wasm.wasm
 ```
 
-### With headers
+### With headers (Array Format)
 
 ```bash
-echo '{"url":"https://httpbin.org/headers","headers":"{\"User-Agent\":\"MyApp/1.0\",\"X-Custom\":\"value\"}"}' \
+echo '[{"name":"url","value":"https://httpbin.org/headers"},{"name":"headers","value":{"User-Agent":"MyApp/1.0","X-Custom":"value"}}]' \
   | wasmtime -S http ./target/wasm32-wasip1/release/http-get-wasm.wasm
 ```
 
 ## Input Format
 
-The module expects a JSON object with:
-- **`url`**: String with the URL to fetch (required)
-- **`headers`**: String with JSON-encoded headers or object with headers (optional)
+The module expects a JSON array with input objects:
+- **Position 0**: `{"name": "url", "value": "..."}` - URL to fetch (required)
+- **Position 1**: `{"name": "headers", "value": {...}}` - Headers object (optional)
 
 Example:
 ```json
-{
-  "url": "https://httpbin.org/get",
-  "headers": "{\"User-Agent\": \"MyApp/1.0\", \"Authorization\": \"Bearer token\"}"
-}
+[
+  {
+    "name": "url",
+    "value": "https://httpbin.org/get"
+  },
+  {
+    "name": "headers", 
+    "value": {
+      "User-Agent": "MyApp/1.0",
+      "Authorization": "Bearer token"
+    }
+  }
+]
 ```
 
 ## Output Format
 
-Returns a JSON object with:
-- **`status`**: Number with HTTP status code
-- **`body`**: String with response body
+Returns a JSON array with output objects:
+- **Position 0**: `{"name": "response", "value": {...}}` - HTTP response
 
 Example:
 ```json
-{
-  "status": 200,
-  "body": "{\"message\": \"Hello World\"}"
-}
+[
+  {
+    "name": "response",
+    "value": {
+      "status": 200,
+      "body": "{\"message\": \"Hello World\"}"
+    }
+  }
+]
 ```
 
 ## Implementation Notes
