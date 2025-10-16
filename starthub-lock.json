@@ -17,7 +17,7 @@
     {
       "name": "headers",
       "description": "Optional HTTP headers to send with the request",
-      "type": "HttpHeaders",
+      "type": "object",
       "required": false,
       "default": null
     }
@@ -31,13 +31,6 @@
     }
   ],
   "types": {
-    "HttpHeaders": {
-      "Accept": "string",
-      "Authorization": "string",
-      "Content-Type": "string",
-      "User-Agent": "string",
-      "X-API-Key": "string"
-    },
     "HttpResponse": {
       "body": "object",
       "status": "number"
