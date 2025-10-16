@@ -11,53 +11,33 @@ fn main() {
     let input: Value = serde_json::from_str(&buf)
         .unwrap_or_else(|_| json!([]));
 
-    // ---- parse array format inputs ----
+    // ---- parse new simplified array format inputs ----
     let Some(input_array) = input.as_array() else {
         eprintln!(r#"{{"error": "input must be a JSON array"}}"#);
         return;
     };
     
-    // Extract url from position 0
-    let Some(url_value) = input_array.get(0).and_then(|v| v.get("value")) else {
-        eprintln!(r#"{{"error": "missing required 'url' input at position 0"}}"#);
+    // Extract url from position 0 (direct string)
+    let Some(url_value) = input_array.get(0) else {
+        eprintln!(r#"{{"error": "missing required URL at position 0"}}"#);
         return;
     };
     
     let Some(url) = url_value.as_str() else {
-        eprintln!(r#"{{"error": "url value must be a string"}}"#);
+        eprintln!(r#"{{"error": "URL at position 0 must be a string"}}"#);
         return;
     };
 
-    // ---- optional headers from position 1 ----
+    // ---- optional headers from position 1 (direct object) ----
     let mut headers_static: Vec<(&'static str, &'static str)> = Vec::new();
     if let Some(headers_input) = input_array.get(1) {
-        if let Some(headers_value) = headers_input.get("value") {
-            match headers_value {
-                Value::String(headers_str) => {
-                    // Parse JSON string if it's a JSON string
-                    if let Ok(headers_obj) = serde_json::from_str::<Value>(headers_str) {
-                        if let Some(headers_map) = headers_obj.as_object() {
-                            for (k, v) in headers_map {
-                                if let Some(val) = v.as_str() {
-                                    let k_static: &'static str = Box::leak(k.clone().into_boxed_str());
-                                    let v_static: &'static str = Box::leak(val.to_string().into_boxed_str());
-                                    headers_static.push((k_static, v_static));
-                                }
-                            }
-                        }
-                    }
-                },
-                Value::Object(headers_obj) => {
-                    // Direct object format
-                    for (k, v) in headers_obj {
-                        if let Some(val) = v.as_str() {
-                            let k_static: &'static str = Box::leak(k.clone().into_boxed_str());
-                            let v_static: &'static str = Box::leak(val.to_string().into_boxed_str());
-                            headers_static.push((k_static, v_static));
-                        }
-                    }
-                },
-                _ => {}
+        if let Some(headers_map) = headers_input.as_object() {
+            for (k, v) in headers_map {
+                if let Some(val) = v.as_str() {
+                    let k_static: &'static str = Box::leak(k.clone().into_boxed_str());
+                    let v_static: &'static str = Box::leak(val.to_string().into_boxed_str());
+                    headers_static.push((k_static, v_static));
+                }
             }
         }
     }
@@ -75,27 +55,21 @@ fn main() {
             let body = r.body().unwrap_or_default();
             let body_str = String::from_utf8_lossy(&body).to_string();
 
-            // Success: output to stdout as array format
+            // Success: output to stdout as simplified array format
             let output = json!([
                 {
-                    "name": "response",
-                    "value": {
-                        "status": status,
-                        "body": body_str
-                    }
+                    "status": status,
+                    "body": body_str
                 }
             ]);
             
             println!("{}", output.to_string());
         }
         Err(e) => {
-            // Error: output to stderr as array format
+            // Error: output to stderr as simplified array format
             let error_output = json!([
                 {
-                    "name": "error",
-                    "value": {
-                        "error": e.to_string()
-                    }
+                    "error": e.to_string()
                 }
             ]);
             eprintln!("{}", error_output.to_string());

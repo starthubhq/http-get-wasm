@@ -11,7 +11,7 @@ A WebAssembly module for making HTTP GET requests, built with Rust and Waki.
 
 1. Install wasmtime: `brew install wasmtime`
 2. Build the WASM module: `cargo +nightly component build --release`
-3. Run a test: `echo '[{"url":"https://httpbin.org/json"}]' | wasmtime -S http ./target/wasm32-wasip1/release/http-get-wasm.wasm`
+3. Run a test: `echo '["https://api.restful-api.dev/objects"]' | wasmtime -S http ./target/wasm32-wasip1/release/http-get-wasm.wasm`
 
 ## Building
 
@@ -21,57 +21,48 @@ cargo +nightly component build --release
 
 ## Usage
 
-### With wasmtime (Array Format)
+### With wasmtime (Simplified Array Format)
 
 ```bash
-echo '[{"name":"url","value":"https://httpbin.org/json"}]' \
+echo '["https://api.restful-api.dev/objects"]' \
   | wasmtime -S http ./target/wasm32-wasip1/release/http-get-wasm.wasm
 ```
 
-### With headers (Array Format)
+### With headers (Simplified Array Format)
 
 ```bash
-echo '[{"name":"url","value":"https://httpbin.org/headers"},{"name":"headers","value":{"User-Agent":"MyApp/1.0","X-Custom":"value"}}]' \
+echo '["https://api.restful-api.dev/objects",{"Accept":"application/json"}]' \
   | wasmtime -S http ./target/wasm32-wasip1/release/http-get-wasm.wasm
 ```
 
 ## Input Format
 
-The module expects a JSON array with input objects:
-- **Position 0**: `{"name": "url", "value": "..."}` - URL to fetch (required)
-- **Position 1**: `{"name": "headers", "value": {...}}` - Headers object (optional)
+The module expects a simplified JSON array:
+- **Position 0**: `"https://example.com"` - URL to fetch (required, string)
+- **Position 1**: `{"Header-Name": "value"}` - Headers object (optional, object)
 
 Example:
 ```json
 [
+  "https://api.restful-api.dev/objects",
   {
-    "name": "url",
-    "value": "https://httpbin.org/get"
-  },
-  {
-    "name": "headers", 
-    "value": {
-      "User-Agent": "MyApp/1.0",
-      "Authorization": "Bearer token"
-    }
+    "Accept": "application/json",
+    "User-Agent": "MyApp/1.0"
   }
 ]
 ```
 
 ## Output Format
 
-Returns a JSON array with output objects:
-- **Position 0**: `{"name": "response", "value": {...}}` - HTTP response
+Returns a simplified JSON array:
+- **Position 0**: `{"status": 200, "body": "..."}` - HTTP response
 
 Example:
 ```json
 [
   {
-    "name": "response",
-    "value": {
-      "status": 200,
-      "body": "{\"message\": \"Hello World\"}"
-    }
+    "status": 200,
+    "body": "{\"message\": \"Hello World\"}"
   }
 ]
 ```

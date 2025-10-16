@@ -39,8 +39,14 @@
       "X-API-Key": "string"
     },
     "HttpResponse": {
-      "body": "string",
+      "body": "object",
       "status": "number"
     }
-  }
+  },
+  "permissions": {
+    "net": ["http", "https"]
+  },
+  "mirrors": [
+    "https://api.starthub.so/storage/v1/object/public/artifacts/std/http-get-wasm/0.0.1/artifact.zip"
+  ]
 }
